@@ -646,7 +646,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="propertyAppreciation" value="3.5" step="0.1" min="-5" max="10">
+                        <input type="number" id="propertyAppreciation" value="2.0" step="0.1" min="-5" max="10">
                         <span class="unit">% per year</span>
                     </div>
                 </div>
@@ -725,10 +725,10 @@
                 
                 <div class="input-group">
                     <div class="input-label">
-                        Annual Rental Supplemental Costs
+                        Annual Rental Supplemental Costs (Utilities, etc.)
                         <div class="tooltip">
                             <span class="info-icon">i</span>
-                            <span class="tooltiptext">Additional annual costs when renting: utilities, insurance, small repairs not covered by landlord.</span>
+                            <span class="tooltiptext">Additional annual costs when renting: heating, water, electricity, building fees, insurance, small repairs not covered by landlord.</span>
                         </div>
                     </div>
                     <div class="input-container">
@@ -747,11 +747,11 @@
                         Investment Yield Rate (pre-tax)
                         <div class="tooltip">
                             <span class="info-icon">i</span>
-                            <span class="tooltiptext">Enter your expected pre-tax annual return. The calculator applies income tax on investment gains consistently across all modes (Moneyland-aligned). This affects renter portfolio growth and any savings contributions/withdrawals.</span>
+                            <span class="tooltiptext">Enter your expected pre-tax annual return. The calculator applies income tax on investment returns (dividends, interest) consistently across all modes (Moneyland-aligned). Note: Switzerland has no capital gains tax on private investments. This affects renter portfolio growth and any savings contributions/withdrawals.</span>
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="investmentYield" value="3.0" step="0.1" min="0" max="15">
+                        <input type="number" id="investmentYield" value="5.0" step="0.1" min="0" max="15">
                         <span class="unit">% per year</span>
                     </div>
                 </div>
@@ -804,11 +804,11 @@
                     </div>
                     <div class="input-container">
                         <label style="margin-right: 16px; display: inline-flex; align-items: center; gap: 6px;">
-                            <input type="radio" name="scenarioMode" value="equalConsumption" checked>
+                            <input type="radio" name="scenarioMode" value="equalConsumption">
                             <span>Equal consumption (baseline)</span>
                         </label>
                         <label style="margin-right: 16px; display: inline-flex; align-items: center; gap: 6px;">
-                            <input type="radio" name="scenarioMode" value="cashflowParity">
+                            <input type="radio" name="scenarioMode" value="cashflowParity" checked>
                             <span>Cash-flow parity (invest actual monthly difference)</span>
                         </label>
                         <label style="display: inline-flex; align-items: center; gap: 6px;">
@@ -1512,7 +1512,7 @@
                 imputedRentalValue: parseFloat(document.getElementById('imputedRentalValue').value),
                 propertyTaxDeductions: parseFloat(document.getElementById('propertyTaxDeductions').value),
                 annualRentalCosts: parseFloat(document.getElementById('annualRentalCosts').value),
-                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'equalConsumption',
+                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'cashflowParity',
                 postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform'
             };
             const calcEngine = (typeof window !== 'undefined' && window.SwissRentBuyCalculatorNew)
@@ -1554,7 +1554,7 @@
                 imputedRentalValue: parseFloat(document.getElementById('imputedRentalValue').value),
                 propertyTaxDeductions: parseFloat(document.getElementById('propertyTaxDeductions').value),
                 annualRentalCosts: parseFloat(document.getElementById('annualRentalCosts').value),
-                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'equalConsumption',
+                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'cashflowParity',
                 postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform'
             };
             const outputs = SwissRentBuyCalculator.calculate(params);
@@ -1985,7 +1985,7 @@
                 propertyTaxDeductions: parseFloat(document.getElementById('propertyTaxDeductions').value),
                 annualRentalCosts: parseFloat(document.getElementById('annualRentalCosts').value),
                 additionalPurchaseCosts: parseFloat(document.getElementById('additionalPurchaseCosts').value),
-                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'equalConsumption',
+                scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'cashflowParity',
                 postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform'
             };
             
@@ -2798,7 +2798,7 @@
                 // Single Calculation Tab Parameters
                 single: {
                     purchasePrice: parseFloat(document.getElementById('purchasePrice').value) || 0,
-                     scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'equalConsumption',
+                     scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'cashflowParity',
                 postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform',
                     downPaymentMode: document.querySelector('input[name="downPaymentMode"]:checked')?.value || 'auto',
                     downPayment: parseFloat(document.getElementById('downPayment').value) || 0,

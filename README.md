@@ -113,9 +113,9 @@ Follow these steps for a clear workflow from “first run” to “deep analysis
 - **Rent & investment assumptions**: Set `Monthly rent`, `Annual Rental Supplemental Costs`, and `Investment yield` (for renter savings).
 - **Taxes**: Either accept the defaults or use your canton’s `Imputed rental value`, `Deductions`, and `Marginal tax rate`.
 - **Comparison Mode**:
+  - `Cash-flow parity (default, recommended)` — Renter invests the positive monthly difference and withdraws when negative.
   - `Equal consumption (baseline)` — Renter invests only initial capital.
-  - `Cash-flow parity (invest actual monthly difference)` — Renter invests the positive monthly difference and withdraws when negative.
-  - `Equal savings (amortization equivalent)` — Renter contributes the buyer’s amortization each year.
+  - `Equal savings (amortization equivalent)` — Renter contributes the buyer's amortization each year.
 - Click `Calculate` to see the decision, monthly snapshot, and detailed breakdowns.
 
 Tips:
@@ -152,19 +152,19 @@ Tips:
 | Additional Costs | 3% (CHF 42,000) | Realistic transaction costs (2.5-5% range) |
 | Maintenance Rate | 1.25% (CHF 17,500) | Typical Swiss property maintenance |
 | Mortgage Rate | 2.0% | Current market rates (stabilized ~2%) |
-| Property Appreciation | 3.5% | 2024-2025 forecast (3-4% range) |
+| Property Appreciation | 2.0% | Conservative estimate (1-3% historical range) |
 | Amortization Period | 15 years | Swiss regulation compliance |
 | Amortization Method | Swiss regulation (66.6% LTV) | Default regulatory compliance |
 | Marginal Tax Rate | 25.0% | Average Swiss combined rate |
 | Monthly Rent | CHF 4,000 | Closer to median (CHF 3,246-4,733) |
-| Investment Yield | 3.0% | Conservative in low-yield environment |
+| Investment Yield | 5.0% | Moderate estimate for diversified portfolio (60/40 stocks/bonds) |
 | Analysis Term | 15 years | Extended for better decision-making |
 
 ### Market Parameters (2024-2025 Environment)
 | Parameter | Conservative | Current Market | Optimistic |
 |-----------|--------------|----------------|------------|
-| Property Appreciation | 1-2% annually | 3-4% annually | 4-5% annually |
-| Investment Yield | 2-3% annually | 3-4% annually | 4-6% annually |
+| Property Appreciation | 1-2% annually | 2-3% annually | 3-4% annually |
+| Investment Yield | 3-4% annually | 5-6% annually | 7-8% annually |
 | Mortgage Rate | 1.5-2.5% annually | 2.0% annually | 2.5-3.5% annually |
 
 ## 🧮 Calculation Methodology
@@ -198,8 +198,8 @@ When the user clicks the **"Calculate"** button, the following steps occur:
 5.  **Result Display**: The comprehensive results, including the final "BUY" or "RENT" decision, the financial advantage, and a detailed cost breakdown, are formatted and displayed in the results section of the UI.
 
 ##### Comparison Modes
-- **Equal Consumption (default, baseline)**: Renter invests only the initial capital not tied up in the property (down payment + purchase costs). Amortization is treated as equity building on the buy side and not mirrored as renter savings.
-- **Cash-flow parity (invest actual monthly difference)**: Renter invests, each year, the difference between the buyer’s monthly cash outflow (interest + amortization during the amortization period + maintenance) and the renter’s monthly outflow (rent + supplemental costs). When the difference is negative, it is modeled as a withdrawal. Contributions/withdrawals compound at the investment yield; investment income is taxed.
+- **Cash-flow parity (default, recommended)**: Renter invests, each year, the difference between the buyer's monthly cash outflow (interest + amortization during the amortization period + maintenance) and the renter's monthly outflow (rent + supplemental costs). When the difference is negative, it is modeled as a withdrawal. Contributions/withdrawals compound at the investment yield; investment income is taxed.
+- **Equal Consumption (baseline)**: Renter invests only the initial capital not tied up in the property (down payment + purchase costs). Amortization is treated as equity building on the buy side and not mirrored as renter savings.
 - **Equal savings (amortization equivalent)**: Renter also contributes an amount each year equal to the buyer's amortization during the amortization period; those contributions compound at the investment yield and investment income is taxed.
 
 ###### Deeper logic and guidance
@@ -360,7 +360,8 @@ Purchase Price: CHF 1,400,000
 Down Payment: CHF 280,000 (20%)
 Mortgage Rate: 2.0%
 Monthly Rent: CHF 4,000
-Investment Yield: 3.0%
+Investment Yield: 5.0%
+Property Appreciation: 2.0%
 Analysis Period: 15 years
 Tax System: Current (2025-2027)
 ```
@@ -665,13 +666,16 @@ git push origin feature/new-functionality
 - **Research-Driven Updates**: Comprehensive analysis of current Swiss market conditions
 - **Realistic Property Prices**: Updated from CHF 2M to CHF 1.4M (median market price)
 - **Current Mortgage Rates**: Increased from 0.9% to 2.0% (market-accurate)
-- **Property Appreciation**: Updated to 3.5% (based on 2024-2025 forecasts)
+- **Property Appreciation**: Conservative 2.0% default (1-3% historical range)
+- **Investment Yield**: Moderate 5.0% default (realistic for 60/40 portfolio vs. previous 3%)
 - **Transaction Costs**: Realistic 3% default (CHF 42,000 vs. CHF 5,000)
 - **Swiss Regulation Default**: Swiss amortization method as default (66.6% LTV compliance)
 
 #### 🛠 **User Experience Improvements**
+- **Default Comparison Mode**: Changed from "Equal Consumption" to "Cash-flow Parity" for fairer rent vs. buy comparison
 - **Manual Down Payment**: Shows warning without auto-correction in manual mode
-- **Label Clarity**: "Annual Rental Costs" renamed to "Annual Rental Supplemental Costs"
+- **Label Clarity**: "Annual Rental Costs" renamed to "Annual Rental Supplemental Costs (Utilities, etc.)"
+- **Tax Terminology**: Clarified that investment taxation is income tax on returns (dividends, interest), not capital gains tax
 - **Intelligent Validation**: Improved input validation with contextual warnings
 - **Market Education**: Defaults teach users realistic Swiss market parameters
 
