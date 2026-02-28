@@ -400,6 +400,49 @@
                 flex-wrap: wrap;
             }
         }
+
+        /* Lump-sum repayment rows */
+        .lump-sum-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            background: #fff;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+        }
+        .lump-sum-row label {
+            font-size: 14px;
+            color: #444;
+            white-space: nowrap;
+        }
+        .lump-sum-row input[type="number"] {
+            max-width: 140px;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+        .lump-sum-remove {
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 4px;
+            margin-left: auto;
+        }
+        .lump-sum-remove:hover { opacity: 0.7; }
+        #lumpSumSummary {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #eef5ff;
+            border-left: 4px solid #007aff;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #0055cc;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -443,7 +486,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="purchasePrice" value="1400000" step="1000" min="0">
+                        <input type="number" id="purchasePrice" value="600000" step="1000" min="0">
                         <span class="unit">CHF</span>
                     </div>
                 </div>
@@ -498,7 +541,7 @@
                     
                     <div class="input-container" id="downPaymentInput">
                         <label>Down Payment:</label>
-                        <input type="number" id="downPayment" value="280000" step="1000" min="0" disabled>
+                        <input type="number" id="downPayment" value="120000" step="1000" min="0" disabled>
                         <span class="unit">CHF</span>
                     </div>
                     
@@ -509,7 +552,7 @@
                                 <span class="tooltiptext">Used by the “maximize mortgage” modes. The mortgage will be the smaller of this limit and the LTV cap (80% or 66.6% of purchase price). Down payment is the remainder.</span>
                             </div>
                         </label>
-                        <input type="number" id="mortgageAmount" value="1120000" step="1000" min="0">
+                        <input type="number" id="mortgageAmount" value="480000" step="1000" min="0">
                         <span class="unit">CHF</span>
                     </div>
                     
@@ -527,7 +570,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="additionalPurchaseCosts" value="42000" step="1000" min="0">
+                        <input type="number" id="additionalPurchaseCosts" value="10000" step="1000" min="0">
                         <span class="unit">CHF</span>
                     </div>
                 </div>
@@ -609,12 +652,28 @@
                     </div>
                     
                     <div class="input-container">
-                        <input type="number" id="annualAmortization" value="22400" step="1000" min="0" disabled>
+                        <input type="number" id="annualAmortization" value="5333" step="1000" min="0" disabled>
                         <span class="unit">CHF per year</span>
                     </div>
                 </div>
             </div>
             
+
+            <!-- Lump-Sum Repayments Section -->
+            <div class="form-section" id="lumpSumSection">
+                <h3>Extra Lump-Sum Repayments</h3>
+                <p style="color:#666; font-size:14px; margin-bottom:16px;">
+                    Add one-time extra mortgage repayments at specific years. Each payment reduces the remaining 
+                    mortgage balance before that year's interest is calculated, lowering future interest costs.
+                </p>
+                <div id="lumpSumList">
+                    <!-- Repayment rows injected here -->
+                </div>
+                <button type="button" class="button secondary" id="addLumpSumBtn" style="margin-top:8px;">
+                    + Add Repayment
+                </button>
+            </div>
+
             <!-- Property Costs Section -->
             <div class="form-section">
                 <h3>Property Costs</h3>
@@ -632,7 +691,7 @@
                         <label for="autoMaintenance">Calculate automatically (1.25% of purchase price)</label>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="annualMaintenanceCosts" value="17500" step="1000" min="0" disabled>
+                        <input type="number" id="annualMaintenanceCosts" value="7500" step="1000" min="0" disabled>
                         <span class="unit">CHF per year</span>
                     </div>
                 </div>
@@ -646,7 +705,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="propertyAppreciation" value="2.0" step="0.1" min="-5" max="10">
+                        <input type="number" id="propertyAppreciation" value="1.0" step="0.1" min="-5" max="10">
                         <span class="unit">% per year</span>
                     </div>
                 </div>
@@ -671,7 +730,7 @@
                         <label for="autoImputedRental">Calculate automatically (65% of annual rent)</label>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="imputedRentalValue" value="30000" step="1000" min="0" disabled>
+                        <input type="number" id="imputedRentalValue" value="15000" step="1000" min="0" disabled>
                         <span class="unit">CHF per year</span>
                     </div>
                 </div>
@@ -685,7 +744,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="propertyTaxDeductions" value="10000" step="1000" min="0">
+                        <input type="number" id="propertyTaxDeductions" value="4000" step="1000" min="0">
                         <span class="unit">CHF per year</span>
                     </div>
                 </div>
@@ -718,7 +777,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="monthlyRent" value="4000" step="100" min="0">
+                        <input type="number" id="monthlyRent" value="1750" step="100" min="0">
                         <span class="unit">CHF per month</span>
                     </div>
                 </div>
@@ -732,7 +791,7 @@
                         </div>
                     </div>
                     <div class="input-container">
-                        <input type="number" id="annualRentalCosts" value="8000" step="1000" min="0">
+                        <input type="number" id="annualRentalCosts" value="6000" step="1000" min="0">
                         <span class="unit">CHF per year</span>
                     </div>
                 </div>
@@ -1513,7 +1572,8 @@
                 propertyTaxDeductions: parseFloat(document.getElementById('propertyTaxDeductions').value),
                 annualRentalCosts: parseFloat(document.getElementById('annualRentalCosts').value),
                 scenarioMode: document.querySelector('input[name="scenarioMode"]:checked')?.value || 'cashflowParity',
-                postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform'
+                postReform: document.querySelector('input[name="taxSystem"]:checked')?.value === 'postReform',
+                lumpSumRepayments: getLumpSumRepayments()
             };
             const calcEngine = (typeof window !== 'undefined' && window.SwissRentBuyCalculatorNew)
                 ? window.SwissRentBuyCalculatorNew
@@ -1694,6 +1754,16 @@
 
             // Purchase breakdown
             const purchaseBreakdown = `
+${result.TotalLumpSumRepayments > 0 ? `
+                <div class="result-item" style="background:#eef5ff; border-left:3px solid #007aff;">
+                    <span>Extra lump-sum repayments</span>
+                    <span>CHF ${Math.round(result.TotalLumpSumRepayments).toLocaleString()}.00</span>
+                </div>
+                ${Object.entries(result.LumpSumByYear).map(([yr, amt]) => `
+                    <div class="result-item" style="padding-left:24px; font-size:13px; color:#555;">
+                        <span>↳ Year ${yr}</span><span>CHF ${Math.round(amt).toLocaleString()}.00</span>
+                    </div>`).join('')}
+                ` : ''}
                 <div class="result-item"><span>Interest costs</span><span>CHF ${Math.round(result.InterestCosts).toLocaleString()}.00</span></div>
                 <div class="result-item"><span>Supplemental and maintenance costs</span><span>CHF ${Math.round(result.SupplementalMaintenanceCosts).toLocaleString()}.00</span></div>
                 <div class="result-item"><span>Amortization</span><span>CHF ${Math.round(result.AmortizationCosts).toLocaleString()}.00</span></div>
@@ -1727,8 +1797,9 @@
                 const rentOutlayNet = (y.annualRent || 0) + rentSuppCostsInput;
                 const renterContrib = (y.renterContribution || 0);
                 return `
-                <tr id="${rowId}" style="border-bottom: 1px solid #dee2e6; background: ${rowBg}">
-                    <td style="padding: 10px 8px; font-weight: 600;">${y.year}</td>
+                <tr id="${rowId}" style="border-bottom: 1px solid #dee2e6; background: ${y.lumpSumThisYear > 0 ? '#eef5ff' : rowBg}">
+                    <td style="padding: 10px 8px; font-weight: 600;">${y.year}${y.lumpSumThisYear > 0 ? '' : ''}</td>
+                    ${result.TotalLumpSumRepayments > 0 ? `<td style="padding: 10px 8px; text-align: right; font-weight: 600; color: #0055cc;">${y.lumpSumThisYear > 0 ? '-' + Math.round(y.lumpSumThisYear).toLocaleString() : '—'}</td>` : ''}
                     <!-- Buy scenario -->
                     <td class="cell-start-buy" style="padding: 10px 8px; text-align: right; font-weight: 600;">${Math.round(buyOutlayNet).toLocaleString()}</td>
                     ${showAdvanced ? `<td style=\"padding: 10px 8px; text-align: right;\">${Math.round(y.annualInterest || 0).toLocaleString()}</td>` : ''}
@@ -1787,12 +1858,14 @@
                         <thead>
                             <tr style="background: #eef5ff; border-bottom: 1px solid #dee2e6;">
                                 <th style="padding: 8px; text-align: left; font-weight: 600; color: #495057;">Year</th>
+                                ${result.TotalLumpSumRepayments > 0 ? '<th style=\"padding: 8px; background:#eef5ff; color:#0055cc; font-weight:600;\" colspan=\"1\">Extra Repayments</th>' : ''}
                                 <th colspan="${buySpan}" style="padding: 8px; text-align: left; font-weight: 600; color: #495057; border-left: 2px solid #c7e0ff; border-right: 2px solid #c7e0ff;">Buy scenario</th>
                                 <th colspan="${rentSpan}" style="padding: 8px; text-align: left; font-weight: 600; color: #495057; border-left: 2px solid #ffe08a; border-right: 2px solid #ffe08a;">Rent scenario</th>
                                 <th colspan="${outSpan}" style="padding: 8px; text-align: left; font-weight: 600; color: #495057; border-left: 2px solid #d0d7de; border-right: 2px solid #d0d7de;">Outcome</th>
                             </tr>
                             <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                                 <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #495057;">Year</th>
+                                ${result.TotalLumpSumRepayments > 0 ? '<th style=\"padding: 12px 8px; text-align: right; font-weight: 600; background:#eef5ff; color:#0055cc;\">Extra Repayment<br><small>(CHF)</small></th>' : ''}
                                 <th style="padding: 12px 8px; text-align: right; font-weight: 600;">Buy Outlay (net)<br><small>(CHF)</small></th>
                                 ${showAdvanced ? `<th style=\"padding:12px 8px; text-align:right;\">Interest<br><small>(CHF)</small></th>` : ''}
                                 ${showAdvanced ? `<th style=\"padding:12px 8px; text-align:right;\">Amortization<br><small>(CHF)</small></th>` : ''}
@@ -3088,6 +3161,90 @@
             }
             // Reset the file input so same file can be loaded again
             event.target.value = '';
+        });
+
+
+        // ============================================================
+        // LUMP-SUM REPAYMENTS FEATURE
+        // ============================================================
+        
+        let lumpSumCounter = 0;
+
+        function getLumpSumRepayments() {
+            const rows = document.querySelectorAll('.lump-sum-row');
+            const result = [];
+            rows.forEach(row => {
+                const year = parseInt(row.querySelector('.ls-year').value);
+                const amount = parseFloat(row.querySelector('.ls-amount').value);
+                if (year > 0 && amount > 0) {
+                    result.push({ year, amount });
+                }
+            });
+            return result;
+        }
+
+        function updateLumpSumSummary() {
+            const repayments = getLumpSumRepayments();
+            const summary = document.getElementById('lumpSumSummary');
+            if (!summary) return;
+            if (repayments.length === 0) {
+                summary.style.display = 'none';
+                return;
+            }
+            const total = repayments.reduce((s, r) => s + r.amount, 0);
+            const lines = repayments
+                .sort((a, b) => a.year - b.year)
+                .map(r => `Year ${r.year}: CHF ${Math.round(r.amount).toLocaleString()}`)
+                .join(' &nbsp;|&nbsp; ');
+            summary.innerHTML = `<strong>Total extra repayments: CHF ${Math.round(total).toLocaleString()}</strong> &nbsp;— ${lines}`;
+            summary.style.display = 'block';
+            markStale();
+        }
+
+        function addLumpSumRow(yearVal, amountVal) {
+            lumpSumCounter++;
+            const id = lumpSumCounter;
+            const list = document.getElementById('lumpSumList');
+            const termYears = parseInt(document.getElementById('termYears').value) || 15;
+            
+            const row = document.createElement('div');
+            row.className = 'lump-sum-row';
+            row.id = `ls-row-${id}`;
+            row.innerHTML = `
+                <label>After year</label>
+                <input type="number" class="ls-year" min="1" max="${termYears}" step="1"
+                       value="${yearVal || 1}" style="max-width:80px;">
+                <label>pay extra</label>
+                <input type="number" class="ls-amount" min="0" step="1000"
+                       value="${amountVal || 50000}" style="max-width:140px;">
+                <span class="unit">CHF</span>
+                <button class="lump-sum-remove" title="Remove" onclick="removeLumpSumRow(${id})">×</button>
+            `;
+            list.appendChild(row);
+
+            // Create summary element if not exists
+            if (!document.getElementById('lumpSumSummary')) {
+                const s = document.createElement('div');
+                s.id = 'lumpSumSummary';
+                list.parentNode.appendChild(s);
+            }
+
+            // Wire up change events
+            row.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('input', updateLumpSumSummary);
+            });
+
+            updateLumpSumSummary();
+        }
+
+        function removeLumpSumRow(id) {
+            const row = document.getElementById(`ls-row-${id}`);
+            if (row) row.remove();
+            updateLumpSumSummary();
+        }
+
+        document.getElementById('addLumpSumBtn').addEventListener('click', () => {
+            addLumpSumRow();
         });
 
         // Initialize

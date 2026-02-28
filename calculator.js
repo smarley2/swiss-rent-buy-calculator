@@ -98,8 +98,23 @@ class SwissRentBuyCalculator {
             scenarioMode = 'equalConsumption',
             // Post-reform tax system (2027+): eliminates Eigenmietwert and related deductions
             // for primary residences to simplify Swiss tax code
-            postReform = false
+            postReform = false,
+            // Lump-sum extra repayments: array of { year, amount } objects
+            // e.g. [{ year: 3, amount: 50000 }, { year: 7, amount: 100000 }]
+            // Each entry reduces the mortgage balance at the start of the specified year
+            lumpSumRepayments = []
         } = params;
+
+        // Build a lookup map: year -> total lump sum for that year
+        const lumpSumByYear = {};
+        for (const entry of lumpSumRepayments) {
+            const y = parseInt(entry.year);
+            const a = parseFloat(entry.amount) || 0;
+            if (y > 0 && a > 0) {
+                lumpSumByYear[y] = (lumpSumByYear[y] || 0) + a;
+            }
+        }
+        let totalLumpSumPaid = 0;
 
         // ============================================================================
         // INITIALIZATION AND SETUP
@@ -143,7 +158,15 @@ class SwissRentBuyCalculator {
             // ------------------------------------------------------------------------
             // MORTGAGE CALCULATIONS (Declining Balance Method)
             // ------------------------------------------------------------------------
-            
+
+            // Apply any lump-sum repayment at the start of this year (before interest)
+            const lumpSum = lumpSumByYear[year] || 0;
+            if (lumpSum > 0 && remainingBalance > 0) {
+                const actualLump = Math.min(lumpSum, remainingBalance);
+                remainingBalance = Math.max(0, remainingBalance - actualLump);
+                totalLumpSumPaid += actualLump;
+            }
+
             // Calculate annual interest on current remaining balance
             // Interest continues even after amortization period ends
             const interest = remainingBalance > 0 ? remainingBalance * mortgageRate : 0;
@@ -151,7 +174,7 @@ class SwissRentBuyCalculator {
             
             // Calculate annual amortization (principal payment)
             // Only occurs during amortization period, then stops
-            const amort = year <= amortizationYears ? annualAmortization : 0;
+            const amort = year <= amortizationYears ? Math.min(annualAmortization, remainingBalance) : 0;
             amortizationCosts += amort;
             
             // Update remaining mortgage balance after amortization payment
@@ -225,6 +248,7 @@ class SwissRentBuyCalculator {
             // Store comprehensive year-by-year data for detailed analysis
             yearly.push({
                 year,
+                lumpSumThisYear: lumpSum,
                 startingBalance: year === 1 ? mortgageAmount : yearly[year - 2].endingBalance,
                 annualInterest: interest,
                 annualAmortization: amort,
@@ -452,6 +476,8 @@ class SwissRentBuyCalculator {
 
             // Metadata and detailed breakdown
             MortgageAmount: Math.round(mortgageAmount),
+            TotalLumpSumRepayments: Math.round(totalLumpSumPaid),
+            LumpSumByYear: lumpSumByYear,
             YearlyBreakdown: yearly,
             ScenarioMode: scenarioMode,
             ErrorMsg: null
